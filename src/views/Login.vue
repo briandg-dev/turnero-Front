@@ -4,12 +4,12 @@
   <!-- Caja de login / registro -->
   <div class="login-container">
     <h1>Turnos Web</h1>
-    <img src="/src/logo.svg" alt="Logo" id="logo"/>
+    <img src="/src/logo.svg" alt="Logo" id="logo" />
 
     <!-- Si estamos en login -->
     <div v-if="isLogin">
       <h2>Iniciar sesión</h2>
-      <input v-model="us_email" type="email" placeholder="Email" id="us_email"/>
+      <input v-model="us_email" type="email" placeholder="Email" id="us_email" />
       <input v-model="idPass" type="password" placeholder="Contraseña" id="idPass" />
       <p id="info"></p>
       <button @click="login">Entrar</button>
@@ -21,6 +21,8 @@
       <h2>Registro</h2>
       <form @submit.prevent="register">
         <input v-model="nroDoc" type="number" placeholder="Número de documento" required />
+        <input v-model="nombre" type="text" placeholder="Nombre/s" required />
+        <input v-model="apellido" type="text" placeholder="Apellido/s" required />
         <input v-model="newEmail" type="email" placeholder="Email" required />
         <input v-model="newPass" type="password" placeholder="Contraseña" required />
         <input v-model="confirmPass" type="password" placeholder="Confirmar contraseña" required />
@@ -33,6 +35,9 @@
 </template>
 
 <script>
+import { BASE_URL } from "@/utils/config.js";
+console.log("La BASE es:", BASE_URL);
+
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
@@ -49,6 +54,8 @@ export default {
     const newEmail = ref('')
     const newPass = ref('')
     const confirmPass = ref('')
+    const nombre = ref('')
+    const apellido = ref('')
 
     // --- Métodos ---
     const toggleForm = () => {
@@ -64,17 +71,41 @@ export default {
       }
     }
 
-    const register = () => {
+    const register = async () => {
       if (newPass.value !== confirmPass.value) {
         alert("Las contraseñas no coinciden")
         return
       }
-      alert(`Usuario ${nroDoc.value} registrado con éxito!`)
-      nroDoc.value = ''
-      newEmail.value = ''
-      newPass.value = ''
-      confirmPass.value = ''
-      isLogin.value = true
+      try {
+        const response = await fetch(`${BASE_URL}users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            numeroDocumento: nroDoc.value,
+            tipoDocumento: 1, // Asumimos 1 como DNI
+            nombres: nombre.value,
+            apellido: apellido.value,
+            mail: newEmail.value,
+            password: newPass.value
+          })
+        })
+        if (!response.ok) {
+          const error = await response.json()
+          alert(error.message || 'Error al registrar usuario')
+          return
+        }
+
+        alert(`Usuario ${nroDoc.value} registrado con éxito!`)
+        nroDoc.value = ''
+        nombre.value = ''
+        apellido.value = ''
+        newEmail.value = ''
+        newPass.value = ''
+        confirmPass.value = ''
+        isLogin.value = true
+      } catch (err) {
+        alert('Error de conexión con el servidor')
+      }
     }
 
     return {
@@ -85,6 +116,8 @@ export default {
       newEmail,
       newPass,
       confirmPass,
+      nombre,
+      apellido,
       toggleForm,
       login,
       register
@@ -134,7 +167,7 @@ html {
   width: 90%;
 }
 
-.login-container h1{
+.login-container h1 {
   text-align: center;
 }
 
@@ -144,7 +177,7 @@ html {
   height: 100px;
 }
 
-.login-container h2{
+.login-container h2 {
   text-align: center;
   margin-bottom: 1.5rem;
 }
