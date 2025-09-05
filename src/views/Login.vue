@@ -134,8 +134,8 @@ export default {
             numeroDocumento: nroDoc.value,
             tipoDocumento: 1, // Asumimos 1 como DNI
             nombres: nombre.value,
-            apellido: apellido.value,
-            mail: newEmail.value,
+            //apellido: apellido.value,
+            email: newEmail.value,
             password: newPass.value
           })
         })
