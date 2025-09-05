@@ -94,17 +94,16 @@ html {
 
 /* Capa encima con efecto frosted glass */
 .container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgb(235, 250, 255);
+  position: fixed;
+  top: 80px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  background: #E9EDF6;
   backdrop-filter: blur(10px);
-  padding: 2rem 3rem;
-  border-radius: 15px;
+  padding: 5px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   color: rgb(0, 0, 0);
-  max-width: 400px;
-  width: 90%;
+  overflow: auto;
 }
 </style>
