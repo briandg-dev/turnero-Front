@@ -112,10 +112,29 @@ export default {
       isLogin.value = !isLogin.value
     }
 
-    const login = () => {
+    const login = async () => {
       if (us_email.value && idPass.value) {
-        alert(`Bienvenido, ${us_email.value}`)
-        router.push('/home')   // 👈 Redirección a Home
+        try {
+          const response = await fetch(`${BASE_URL}auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: String(us_email.value).toLowerCase(),
+              password: idPass.value
+            })
+            
+          })
+          if (!response.ok) {
+            const error = await response.json()
+            alert(error.message || 'Error al registrar usuario')
+            return
+          }
+          router.push('/home')
+        } catch (err) {
+          alert('Error de conexión con el servidor')
+        }
+        
+        
       } else {
         alert('Ingrese email y contraseña')
       }
@@ -127,14 +146,14 @@ export default {
         return
       }
       try {
-        const response = await fetch(`${BASE_URL}users`, {
+        const response = await fetch(`${BASE_URL}auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            numeroDocumento: nroDoc.value,
+            numeroDocumento: String(nroDoc.value),
             tipoDocumento: 1, // Asumimos 1 como DNI
             nombres: nombre.value,
-            //apellido: apellido.value,
+            apellido: apellido.value,
             email: newEmail.value,
             password: newPass.value
           })
@@ -265,8 +284,8 @@ html {
   padding: 0 4px;
 }
 
-.input-group input:focus + label,
-.input-group input:not(:placeholder-shown) + label {
+.input-group input:focus+label,
+.input-group input:not(:placeholder-shown)+label {
   top: 0px;
   font-size: 12px;
   color: #aaa;
@@ -333,5 +352,4 @@ html {
 .login-container.light-mode a:hover {
   color: #00247f;
 }
-
 </style>

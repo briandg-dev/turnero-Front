@@ -1,7 +1,6 @@
 <template>
   <div class="background"></div>
 
-  <!-- Caja de login / registro -->
   
 </template>
 
@@ -10,43 +9,12 @@ export default {
   name: 'App',
   data() {
   return {
-    isLogin: true,  // controla si estamos en login o registro
-    us_email: '',   
-    idPass: '',     
-    nroDoc: '',
-    newEmail: '',
-    newPass: '',
-    confirmPass: ''
+
+
   }
 }
 ,
   methods: {
-
-    // -- Cambia entre login y registro ------------------------
-    toggleForm() {
-      this.isLogin = !this.isLogin;
-    },
-
-
-    // -- Simula el login --------------------------------------
-    login() {
-      alert(`Bienvenido, ${this.us_email}`);
-    },
-
-
-    // -- Simula el registro -----------------------------------
-    register() {
-      if (this.newPass !== this.confirmPass) {
-        alert("Las contraseñas no coinciden");
-        return;
-      }
-      alert(`Usuario ${this.nroDoc} registrado con éxito!`);
-      this.nroDoc = '';
-      this.newEmail = '';
-      this.newPass = '';
-      this.confirmPass = '';
-      this.isLogin = true;
-    }
 
 
   }
